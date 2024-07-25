@@ -18,7 +18,7 @@ SymCalc is a library that introduces mathematics to code, where you can declare,
 - [Learning SymCalc](#learning-symcalc)
 - [Authors](#authors)
 
-## Basic example
+## Example
 ```cpp
 #include <symcalc/symcalc.hpp>
 
@@ -41,6 +41,42 @@ int main(){
 }
 ```
 
+## Basic usage
+
+1. Define a variable:
+```cpp
+Equation x("x");
+```
+
+2. Define a function:
+```cpp
+Equation fx = pow(x, 2);
+```
+
+3. Evaluate:
+```cpp
+double value = fx.eval({{x, 4}});
+// or
+value = fx({{x, 4}});
+```
+
+4. Differentiate:
+```cpp
+Equation dfdx = fx.derivative();
+```
+
+5. Multi-variable!:
+```cpp
+Equation x("x");
+Equation y("y");
+
+Equation fxy = pow(x, 2) - 4 * abs(y);
+
+Equation dfdx = fxy.derivative(x);
+Equation dfdy = fxy.derivative(y);
+```
+
+6. See more on the [website](https://symcalc.site/cpp)!
 
 ## Install with make
 
