@@ -9,7 +9,7 @@ SymCalc is a library that introduces mathematics to code, where you can declare,
 [License: Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 /
 [Ruby](https://github.com/symcalc/symcalc-ruby)
- and 
+, 
 [C++](https://github.com/symcalc/symcalc-cpp)
 
 ## Contents
