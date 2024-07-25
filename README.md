@@ -40,16 +40,16 @@ Equation fx = 5 * pow(x, 2) + sin(x);
 using namespace symcalc;
 
 int main(){
-    # SymCalc variable
+    // SymCalc variable
     Equation x ("x");
 
-    # SymCalc function
+    // SymCalc function
     Equation fx = pow(x, 2) * 5 - 4 * sin(exp(x));
 
-    # SymCalc derivative
+    // SymCalc derivative
     Equation dfdx = fx.derivative();
 
-    # SymCalc evaluate
+    // SymCalc evaluate
     double value = dfdx.eval({{x, 5}});
 
     std::cout << value << std::endl;
