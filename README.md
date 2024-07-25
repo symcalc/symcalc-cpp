@@ -125,6 +125,10 @@ make
 ```bash
 make install
 ```
+Or to a specific location with
+```bash
+make install PREFIX=/path/to/install
+```
 
 ## Learning SymCalc
 
