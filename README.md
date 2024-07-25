@@ -4,17 +4,16 @@
 
 SymCalc is a library that introduces mathematics to code, where you can declare, evaluate, and differentiate any possible maths function with a single call.
 
-SymCalc transforms hard-coded mathematical functions like this:
+SymCalc allows to write readable and flexible code, adding a lot of functionality along the way, like this:
+```cpp
+Equation fx = 5 * pow(x, 2) + sin(x);
+```
+Instead of hard-coded functions like this:
 ```cpp
 #include <cmath>
 double fx(double x){
 	return 5 * pow(x, 2) + sin(x);
 }
-```
-
-Into readable and flexible code like this:
-```cpp
-Equation fx = 5 * pow(x, 2) + sin(x);
 ```
 
 [Website](https://symcalc.site/cpp)
@@ -61,6 +60,7 @@ int main(){
 1. Include the SymCalc header:
 ```cpp
 #include <symcalc/symcalc.hpp>
+using namespace symcalc;
 ```
 
 2. Define a variable:
@@ -96,12 +96,17 @@ Equation dfdx = fxy.derivative(x);
 Equation dfdy = fxy.derivative(y);
 ```
 
-7. Compile:
+7. Display:
+```cpp
+std::cout << fx << std::endl; // Prints the function
+```
+
+8. Compile:
 ```bash
 g++ main.cpp -o main -std=c++11 -lsymcalc
 ```
 
-8. See more on the [website](https://symcalc.site/cpp)!
+9. See more on the [website](https://symcalc.site/cpp)!
 
 ## Install with make
 
