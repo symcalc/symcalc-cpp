@@ -4,9 +4,11 @@
 
 SymCalc is a library that introduces mathematics to code, where you can declare, evaluate, and differentiate any possible maths function with a single call.
 
-[!Website](https://symcalc.site/cpp)
-[!License: Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0)
-[!Languages: Ruby and C++]
+[Website](https://symcalc.site/cpp)
+/
+[License: Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0)
+/
+[Languages: Ruby and C++]
 
 ## Contents
 - [Basic example](#basic-example)
