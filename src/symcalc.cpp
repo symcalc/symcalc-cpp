@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "symcalc/symcalc.hpp"
+#include <cstdlib>
 
 namespace symcalc{
 	
@@ -658,6 +659,70 @@ void Power::__delete_equation_base__(){
 
 
 
+
+Log::Log(EquationBase* eq, EquationBase* base) : EquationBase("log"), eq(eq), base(base){
+	this->ready_txt = "log_(" + base->txt() + ")(" + eq->txt() + ")";
+}
+
+Log::Log(const Log& lvalue) : EquationBase(lvalue), ready_txt(lvalue.ready_txt){
+	const EquationBase* lvalue_eq = lvalue.eq;
+	const EquationBase* lvalue_base = lvalue.base;
+	this->eq = copy(lvalue_eq);
+	this->base = copy(lvalue_base);
+}
+
+Log::~Log(){
+	delete_equation_base(eq);
+	delete_equation_base(base);
+}
+
+std::vector<SYMCALC_VAR_NAME_TYPE> Log::list_variables() const{
+	std::vector<SYMCALC_VAR_NAME_TYPE> variables = eq->list_variables();
+	for(SYMCALC_VAR_NAME_TYPE var : base->list_variables()){
+		if(!include(variables, var)){
+			variables.push_back(var);
+		}
+	}
+	return variables;
+}
+
+
+std::string Log::txt() const{
+	return this->ready_txt;
+}
+
+SYMCALC_VALUE_TYPE Log::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
+	return std::log(eq->eval(var_hash)) / std::log(base->eval(var_hash));
+}
+
+EquationBase* Log::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+	EquationBase* div = new Div(eq->__derivative__(var), copy(eq));
+	EquationBase* natural_log = new Ln(copy(this->base));
+	return new Mult({div, natural_log});
+}
+
+
+EquationBase* Log::__simplify__() const{
+	EquationBase* simplified_eq = eq->__simplify__();
+	EquationBase* simplified_base = base->__simplify__();
+	return new Log(simplified_eq, simplified_base);
+}
+
+EquationBase* Log::__copy_equation_base__() const{
+	const Log* casted = dynamic_cast<const Log*>(this);
+	return new Log(*casted);
+}
+void Log::__delete_equation_base__(){
+	Log* casted = dynamic_cast<Log*>(this);
+	delete casted;
+}
+
+
+
+
+
+
+
 Ln::Ln(EquationBase* eq) : EquationBase("ln"), eq(eq){
 	this->ready_txt = "ln(" + eq->txt() + ")";
 }
@@ -691,6 +756,18 @@ EquationBase* Ln::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 
 EquationBase* Ln::__simplify__() const{
 	EquationBase* simplified = eq->__simplify__();
+	if(simplified->type == "exp"){
+		Exp* casted = dynamic_cast<Exp*>(simplified);
+		EquationBase* return_value = copy(casted->eq);
+		delete_equation_base(casted);
+		return return_value;
+	}else if(simplified->type == "const"){
+		Constant* casted = dynamic_cast<Constant*>(simplified);
+		if(casted->name == "e"){
+			delete_equation_base(simplified);
+			return new EquationValue(1);
+		}
+	}
 	return new Ln(simplified);
 }
 
@@ -975,6 +1052,10 @@ Equation exp(const Equation eq){
 
 Equation ln(const Equation eq){
 	return Equation(new Ln(copy(eq.eq)));
+}
+
+Equation log(const Equation eq, const Equation base){
+	return Equation(new Log(copy(eq.eq), copy(base.eq)));
 }
 
 Equation pow(const Equation base, const Equation power){

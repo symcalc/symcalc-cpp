@@ -255,6 +255,29 @@ public:
 };
 
 
+class Log : public EquationBase{
+public:
+	EquationBase* base;
+	EquationBase* eq;
+	std::string ready_txt;
+	
+	Log(EquationBase* eq, EquationBase* base);
+	Log(const Log& lvalue);
+	
+	~Log();
+	
+	std::string txt() const override;
+	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
+	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	
+	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
+	
+	EquationBase* __simplify__() const override;
+	
+	EquationBase* __copy_equation_base__() const override;
+	void __delete_equation_base__() override;
+};
+
 
 class Ln : public EquationBase{
 public:
@@ -453,6 +476,7 @@ public:
 
 Equation exp(const Equation eq);
 Equation ln(const Equation eq);
+Equation log(const Equation eq, const Equation base);
 Equation pow(const Equation base, const Equation power);
 Equation abs(const Equation eq);
 Equation sin(const Equation eq);
