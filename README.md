@@ -13,7 +13,8 @@ SymCalc is a library that introduces mathematics to code, where you can declare,
 [C++](https://github.com/symcalc/symcalc-cpp)
 
 ## Contents
-- [Basic example](#basic-example)
+- [Example](#example)
+- [Basic usage](#basic-usage)
 - [Install](#install-with-make)
 - [Learning SymCalc](#learning-symcalc)
 - [Authors](#authors)
