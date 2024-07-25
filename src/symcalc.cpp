@@ -135,6 +135,32 @@ void EquationValue::__delete_equation_base__(){
 
 
 
+Constant::Constant(SYMCALC_VAR_NAME_TYPE name, SYMCALC_VALUE_TYPE value) : EquationValue(value), name(name) {
+	this->type = "const";
+}
+
+Constant::Constant(const Constant& lvalue) : EquationValue(lvalue){
+	this->name = lvalue.name;
+}
+
+std::string Constant::txt() const{
+	return this->name;
+}
+
+EquationBase* Constant::__copy_equation_base__() const{
+	const Constant* casted = dynamic_cast<const Constant*>(this);
+	return new Constant(*casted);
+}
+
+void Constant::__delete_equation_base__(){
+	Constant* casted = dynamic_cast<Constant*>(this);
+	delete casted;
+}
+
+
+
+
+
 Sum::Sum(std::vector<EquationBase*> inp_elements) : EquationBase("sum"){
 	std::vector<EquationBase*> extracted_elements;
 	
@@ -982,6 +1008,10 @@ Equation::Equation(SYMCALC_VALUE_TYPE num){
 	this->eq = new EquationValue(num);
 }
 
+Equation::Equation(SYMCALC_VAR_NAME_TYPE const_name, SYMCALC_VALUE_TYPE value){
+	this->eq = new Constant(const_name, value);
+}
+
 std::ostream& operator<<(std::ostream &stream, const Equation equation){
 	stream << equation.eq->txt();
 	return stream;
@@ -1053,11 +1083,18 @@ SYMCALC_VALUE_TYPE Equation::eval(std::map<Equation, SYMCALC_VALUE_TYPE> var_has
 	return eq->eval(new_var_hash);
 }
 
+SYMCALC_VALUE_TYPE Equation::eval() const{
+	return this->eval(SYMCALC_VAR_HASH_TYPE());
+}
+
 SYMCALC_VALUE_TYPE Equation::operator()(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return eval(var_hash);
 }
 SYMCALC_VALUE_TYPE Equation::operator()(std::map<Equation, SYMCALC_VALUE_TYPE> var_hash) const{
 	return eval(var_hash);
+}
+SYMCALC_VALUE_TYPE Equation::operator()() const{
+	return this->eval(SYMCALC_VAR_HASH_TYPE());
 }
  
 
@@ -1151,6 +1188,14 @@ void delete_equation_base(EquationBase* eq){
 	
 	eq->__delete_equation_base__();
 	eq = nullptr;
+}
+
+
+// Constants
+
+namespace Constants{
+	Equation Pi ("pi", M_PI);
+	Equation E ("e", std::exp(1.0));
 }
 
 

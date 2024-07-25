@@ -115,6 +115,21 @@ public:
 	void __delete_equation_base__() override;
 };
 
+
+class Constant : public EquationValue{
+public:
+	SYMCALC_VAR_NAME_TYPE name;
+
+	Constant(SYMCALC_VAR_NAME_TYPE name, SYMCALC_VALUE_TYPE value);
+	Constant(const Constant& lvalue);
+	
+	std::string txt() const override;
+	
+	EquationBase* __copy_equation_base__() const override;
+	void __delete_equation_base__() override;
+};
+
+
 EquationBase* to_equation(SYMCALC_VALUE_TYPE num);
 
 
@@ -398,6 +413,7 @@ public:
 	Equation(Variable var);
 	Equation(SYMCALC_VALUE_TYPE value);
 	Equation(SYMCALC_VAR_NAME_TYPE var_name);
+	Equation(SYMCALC_VAR_NAME_TYPE const_name, SYMCALC_VALUE_TYPE value);
 	Equation(const Equation& lvalue);
 	
 	friend std::ostream& operator<<(std::ostream &stream, const Equation equation);
@@ -421,9 +437,10 @@ public:
 	
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const;
 	SYMCALC_VALUE_TYPE eval(std::map<Equation, SYMCALC_VALUE_TYPE> var_hash) const;
+	SYMCALC_VALUE_TYPE eval() const;
 	SYMCALC_VALUE_TYPE operator()(SYMCALC_VAR_HASH_TYPE var_hash) const;
 	SYMCALC_VALUE_TYPE operator()(std::map<Equation, SYMCALC_VALUE_TYPE> var_hash) const;
-	
+	SYMCALC_VALUE_TYPE operator()() const;
 
 	std::string type() const{
 		return eq->type;
@@ -442,6 +459,13 @@ Equation sin(const Equation eq);
 Equation cos(const Equation eq);
 
 
+
+// Constants
+
+namespace Constants{
+	extern Equation Pi;
+	extern Equation E;
+}
 
 }
 
