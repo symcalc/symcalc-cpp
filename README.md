@@ -2,7 +2,7 @@
 
 ![SymCalc Logo](/symcalc_logo.png)
 
-SymCalc (which stands for *Sym*bolic *Cal*culus) is a library that introduces mathematics to code, where you can declare, evaluate, and differentiate any possible maths function with a single call.
+SymCalc (which stands for **Sym**bolic **Cal**culus) is a library that introduces mathematics to code, where you can declare, evaluate, and differentiate any possible maths function with a single call.
 
 SymCalc allows to write readable and flexible code, adding a lot of functionality along the way, like this:
 ```cpp
