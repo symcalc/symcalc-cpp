@@ -8,16 +8,15 @@ SymCalc is a library that introduces mathematics to code, where you can declare,
 /
 [License: Apache-2.0](http://www.apache.org/licenses/LICENSE-2.0)
 /
-Languages:
 [Ruby](https://github.com/symcalc/symcalc-ruby)
-, 
+ and 
 [C++](https://github.com/symcalc/symcalc-cpp)
 
 ## Contents
 - [Basic example](#basic-example)
 - [Install](#install-with-make)
 - [Learning SymCalc](#learning-symcalc)
-- [Contact](#contact)
+- [Authors](#authors)
 
 ## Basic example
 ```cpp
@@ -45,7 +44,7 @@ int main(){
 
 ## Install with make
 
-1. *Download the source code with git or wget:*
+1. Download the source code with git or wget:
 ```bash
 git clone https://github.com/symcalc/symcalc-cpp; cd symcalc-cpp
 ```
@@ -56,12 +55,12 @@ or
 wget https://symcalc.site/cpp/source_latest.zip; unzip source_latest.zip; cd symcalc_cpp_source
 ```
 
-2. *Build SymCalc with make*
+2. Build SymCalc with make
 ```bash
 make
 ```
 
-3. *Install SymCalc*
+3. Install SymCalc
 ```bash
 make install
 ```
@@ -78,4 +77,4 @@ You can learn more about SymCalc on these resources:
 
 ## Authors
 
-SymCalc is currently developed and maintaned by [Kyryl Shyshko](https://kyrylshyshko.me)(@kyryloshy)
+SymCalc is currently developed and maintaned by [Kyryl Shyshko](https://kyrylshyshko.me) ([@kyryloshy](https://github.com/kyryloshy))
