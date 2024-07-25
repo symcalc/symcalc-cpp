@@ -4,8 +4,6 @@
 
 SymCalc is a library that introduces mathematics to code, where you can declare, evaluate, and differentiate any possible maths function with a single call.
 
----
-
 SymCalc transforms hard-coded mathematical functions like this:
 ```cpp
 #include <cmath>
