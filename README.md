@@ -16,7 +16,6 @@ SymCalc is a library that introduces mathematics to code, where you can declare,
 - [Example](#example)
 - [Basic usage](#basic-usage)
 - [Install](#install-with-make)
-- [Compiling with SymCalc](#compiling-with-symcalc)
 - [Learning SymCalc](#learning-symcalc)
 - [Authors](#authors)
 
@@ -45,29 +44,34 @@ int main(){
 
 ## Basic usage
 
-1. Define a variable:
+1. Include the SymCalc header:
+```cpp
+#include <symcalc/symcalc.hpp>
+```
+
+2. Define a variable:
 ```cpp
 Equation x("x");
 ```
 
-2. Define a function:
+3. Define a function:
 ```cpp
 Equation fx = pow(x, 2);
 ```
 
-3. Evaluate:
+4. Evaluate:
 ```cpp
 double value = fx.eval({{x, 4}});
 // or
 value = fx({{x, 4}});
 ```
 
-4. Differentiate:
+5. Differentiate:
 ```cpp
 Equation dfdx = fx.derivative();
 ```
 
-5. Multi-variable!:
+6. Multi-variable!:
 ```cpp
 Equation x("x");
 Equation y("y");
@@ -78,7 +82,12 @@ Equation dfdx = fxy.derivative(x);
 Equation dfdy = fxy.derivative(y);
 ```
 
-6. See more on the [website](https://symcalc.site/cpp)!
+7. Compile:
+```bash
+g++ main.cpp -o main -std=c++11 -lsymcalc
+```
+
+8. See more on the [website](https://symcalc.site/cpp)!
 
 ## Install with make
 
@@ -101,18 +110,6 @@ make
 3. Install SymCalc
 ```bash
 make install
-```
-
-## Compiling with SymCalc
-
-To use SymCalc in your program, first include the header file:
-```cpp
-#include <symcalc/symcalc.hpp>
-```
-
-Then, you can compile a program with SymCalc like this:
-```bash
-g++ main.cpp -o main -std=c++11 -lsymcalc
 ```
 
 ## Learning SymCalc
