@@ -16,6 +16,7 @@ SymCalc is a library that introduces mathematics to code, where you can declare,
 - [Example](#example)
 - [Basic usage](#basic-usage)
 - [Install](#install-with-make)
+- [Compiling with SymCalc](#compiling-with-symcalc)
 - [Learning SymCalc](#learning-symcalc)
 - [Authors](#authors)
 
@@ -100,6 +101,18 @@ make
 3. Install SymCalc
 ```bash
 make install
+```
+
+## Compiling with SymCalc
+
+To use SymCalc in your program, first include the header file:
+```cpp
+#include <symcalc/symcalc.hpp>
+```
+
+Then, you can compile a program with SymCalc like this:
+```bash
+g++ main.cpp -o main -std=c++11 -lsymcalc
 ```
 
 ## Learning SymCalc
