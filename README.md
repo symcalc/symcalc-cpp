@@ -52,6 +52,8 @@ int main(){
     double value = dfdx.eval({{x, 5}});
 
     std::cout << value << std::endl;
+
+    return 0;
 }
 ```
 
