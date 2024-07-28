@@ -432,6 +432,7 @@ class Equation{
 public:
 	EquationBase* eq;
 	
+	Equation();
 	Equation(EquationBase* equation);
 	Equation(Variable var);
 	Equation(SYMCALC_VALUE_TYPE value);
@@ -457,6 +458,7 @@ public:
 	Equation simplify() const;
 	
 	std::vector<Equation> list_variables() const;
+	std::vector<std::string> list_variables_str() const;
 	
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const;
 	SYMCALC_VALUE_TYPE eval(std::map<Equation, SYMCALC_VALUE_TYPE> var_hash) const;
@@ -468,6 +470,12 @@ public:
 	std::string type() const{
 		return eq->type;
 	}
+	
+	
+	// Gradient vector functions
+	std::vector<Equation> gradient(std::vector<Equation>) const;
+	std::vector<Equation> gradient() const;
+	
 
 	~Equation();
 };
@@ -482,6 +490,16 @@ Equation abs(const Equation eq);
 Equation sin(const Equation eq);
 Equation cos(const Equation eq);
 
+//
+// Outside SymCalc operation functions
+//
+
+// Get list of variables for the vector of Equation
+std::vector<std::string> list_variables_str(std::vector<Equation>);
+std::vector<Equation> list_variables(std::vector<Equation>);
+
+// Jacobian matrix out of a list of equations
+std::vector<std::vector<Equation>> jacobian(std::vector<Equation>);
 
 
 // Constants

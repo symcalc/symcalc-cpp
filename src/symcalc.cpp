@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include "symcalc/symcalc.hpp"
-#include <cstdlib>
+
 
 namespace symcalc{
 	
@@ -67,11 +67,10 @@ SYMCALC_VALUE_TYPE Variable::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 
 
 EquationBase* Variable::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
-	EquationValue* out = new EquationValue(1.0);
 	if(var != this->name){
-		out->value = 0;
+		return new EquationValue(0.0);
 	}
-	return out;
+	return new EquationValue(1.0);
 }
 
 
@@ -272,6 +271,10 @@ EquationBase* Sum::__simplify__() const{
 		return els[0];
 	}
 	
+	if(els.size() == 0){
+		return new EquationValue(0);
+	}
+	
 	return new Sum(els);
 }
 
@@ -462,14 +465,14 @@ EquationBase* Mult::__simplify__() const{
 		}
 	}
 	
-	if(coeff != 1){
+	if(coeff != 1 || els.size() == 0){
 		els.insert(els.begin(), new EquationValue(coeff));
 	}
 	
 	if(els.size() == 1){
 		return els[0];
-	}
-	
+	}	
+
 	return new Mult(els);
 }
 
@@ -601,9 +604,23 @@ SYMCALC_VALUE_TYPE Power::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 }
 
 EquationBase* Power::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
-	if(power->type == "val"){
-		EquationValue* power_eq = dynamic_cast<EquationValue*>(power);
-		return new Mult({copy(power), new Power(copy(base), to_equation(power_eq->value - 1)), base->__derivative__(var)});
+	if(power->type == "val" || power->type == "const"){
+	
+		// If the power is a number or a constant then return the following:
+		//
+		// f = g ^ C
+		// 
+		// df/dx = C * g^(C - 1) * dg/dx
+	
+		const EquationValue* power_eq = dynamic_cast<const EquationValue*>(power);
+		EquationBase* power_copy = copy(power); // C
+		EquationBase* base_copy = copy(base); // g
+		EquationBase* new_eq_value = new EquationValue(power_eq->value - 1); // C - 1
+		EquationBase* base_deriv = base->__derivative__(var); // dg/dx
+		EquationBase* power_to_mult = new Power(base_copy, new_eq_value); // g ^ C - 1
+		
+		EquationBase* final_mult = new Mult({power_copy, power_to_mult, base_deriv}); // C * g^(C - 1) * dg/dx
+		return final_mult;
 	}else{
 		// derivative of f(x) ^ g(x) = f(x)^g(x) * (g'(x) * ln(f(x)) + f'(x) * g(x) / f(x))
 		EquationBase* mult_l_part = new Power(copy(base), copy(power));
@@ -1046,210 +1063,11 @@ void Cos::__delete_equation_base__(){
 
 
 
-Equation exp(const Equation eq){
-	return Equation(new Exp(copy(eq.eq)));
-}
-
-Equation ln(const Equation eq){
-	return Equation(new Ln(copy(eq.eq)));
-}
-
-Equation log(const Equation eq, const Equation base){
-	return Equation(new Log(copy(eq.eq), copy(base.eq)));
-}
-
-Equation pow(const Equation base, const Equation power){
-	return Equation(new Power(copy(base.eq), copy(power.eq)));
-}
-
-Equation abs(const Equation eq){
-	return Equation(new Abs(copy(eq.eq)));
-}
-
-Equation sin(const Equation eq){
-	return Equation(new Sin(copy(eq.eq)));
-}
-
-Equation cos(const Equation eq){
-	return Equation(new Cos(copy(eq.eq)));
-}
-
-
-Equation::Equation(EquationBase* make_eq) {
-	if(SYMCALC_AUTO_SIMPLIFY){
-		eq = make_eq->__simplify__();
-		delete_equation_base(make_eq);
-	}else{
-		eq = make_eq;
-	}
-}
-
-
-Equation::Equation(SYMCALC_VALUE_TYPE num){
-	this->eq = new EquationValue(num);
-}
-
-Equation::Equation(SYMCALC_VAR_NAME_TYPE const_name, SYMCALC_VALUE_TYPE value){
-	this->eq = new Constant(const_name, value);
-}
-
-std::ostream& operator<<(std::ostream &stream, const Equation equation){
-	stream << equation.eq->txt();
-	return stream;
-}
-
-
-Equation operator+(const Equation eq1, const Equation eq2){
-	return Equation(new Sum({copy(eq1.eq), copy(eq2.eq)}));
-}
-
-Equation operator-(const Equation eq1, const Equation eq2){
-	return Equation(new Sum({copy(eq1.eq), new Negate(copy(eq2.eq))}));
-}
-
-Equation operator*(const Equation eq1, const Equation eq2){
-	return Equation(new Mult({copy(eq1.eq), copy(eq2.eq)}));
-}
-
-Equation operator/(const Equation eq1, const Equation eq2){
-	return Equation(new Div(copy(eq1.eq), copy(eq2.eq)));
-}
-
-Equation operator-(const Equation eq1){
-	return Equation(new Negate(copy(eq1.eq)));
-}
-
-
-
-Equation Equation::derivative(Equation variable, size_t order) const{
-	Variable* var = dynamic_cast<Variable*>(variable.eq);
-	if(!var){
-		throw std::runtime_error("Provided variable is not of Variable type");
-	}
-	EquationBase* deriv = eq;
-	for(size_t i = 0; i < order; i++){
-		deriv = deriv->__derivative__(var->name);
-	}	
-	
-	return Equation(deriv);
-}
-
-
-Equation Equation::derivative(size_t order) const{
-	std::vector<Equation> vars = this->list_variables();
-	if(vars.size() == 1){
-		return this->derivative(vars[0], order);
-	}else{
-		throw std::runtime_error("Equation.derivative expects a variable to differentiate with respect to, since list_variables() gives more than one variable.");
-	}
-}
-
-
-
-
-SYMCALC_VALUE_TYPE Equation::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
-	return eq->eval(var_hash);
-}
-
-
-SYMCALC_VALUE_TYPE Equation::eval(std::map<Equation, SYMCALC_VALUE_TYPE> var_hash) const{
-	SYMCALC_VAR_HASH_TYPE new_var_hash;
-	for(std::pair<Equation, SYMCALC_VALUE_TYPE> mypair: var_hash){
-		Variable* var = dynamic_cast<Variable*>(mypair.first.eq);
-		if(!var){
-			throw std::runtime_error("Provided variable is not of Variable type");
-		}
-		new_var_hash[var->name] = mypair.second;
-	}
-	return eq->eval(new_var_hash);
-}
-
-SYMCALC_VALUE_TYPE Equation::eval() const{
-	return this->eval(SYMCALC_VAR_HASH_TYPE());
-}
-
-SYMCALC_VALUE_TYPE Equation::operator()(SYMCALC_VAR_HASH_TYPE var_hash) const{
-	return eval(var_hash);
-}
-SYMCALC_VALUE_TYPE Equation::operator()(std::map<Equation, SYMCALC_VALUE_TYPE> var_hash) const{
-	return eval(var_hash);
-}
-SYMCALC_VALUE_TYPE Equation::operator()() const{
-	return this->eval(SYMCALC_VAR_HASH_TYPE());
-}
- 
-
-bool operator<(const Equation holder1, const Equation holder2){
-	return true;
-}
-
-
-
-
-
-Equation::~Equation(){
-	delete_equation_base(eq);
-}
-
-
-
-
-
-
-Equation::Equation(const Equation& lvalue) : eq(nullptr){
-	
-	const EquationBase* lvalue_eq = lvalue.eq;	
-
-	
-	eq = copy(lvalue_eq);
-	
-}
-
-
-Equation::Equation(SYMCALC_VAR_NAME_TYPE var_name) : eq(nullptr){
-	eq = new Variable(var_name);
-}
-
-
-
-
-std::vector<Equation> Equation::list_variables() const{
-	std::vector<SYMCALC_VAR_NAME_TYPE> vars = eq->list_variables();
-	
-	std::vector<Equation> converted;
-	
-	for(SYMCALC_VAR_NAME_TYPE var : vars){
-		converted.push_back(Equation(var));
-	}
-	
-	return converted;
-	
-}
-
-
-
-
 
 
 EquationBase* copy(const EquationBase* start_eq){
 	return start_eq->__copy_equation_base__();
 }
-
-
-
-Equation Equation::pow(Equation power) const{
-	EquationBase* copy1 = copy(this->eq);
-	EquationBase* copy2 = copy(power.eq);
-	return Equation(new Power(copy1, copy2));
-}
-
-
-
-
-Equation Equation::simplify() const{
-	return Equation(eq->__simplify__());
-}
-
 
 
 std::vector<EquationBase*> copy(std::vector<const EquationBase*> eqs){
