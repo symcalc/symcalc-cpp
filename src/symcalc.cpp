@@ -14,6 +14,12 @@
 
 #include "symcalc/symcalc.hpp"
 
+//
+// symcalc.cpp:
+// Defines all 'inside' classes of SymCalc, like EquationBase, Variable, Mult, etc.
+// Defines constants
+//
+
 
 namespace symcalc{
 	
@@ -1058,38 +1064,6 @@ void Cos::__delete_equation_base__(){
 
 
 
-
-
-
-
-
-
-
-EquationBase* copy(const EquationBase* start_eq){
-	return start_eq->__copy_equation_base__();
-}
-
-
-std::vector<EquationBase*> copy(std::vector<const EquationBase*> eqs){
-	std::vector<EquationBase*> vec;
-	vec.reserve(eqs.size());
-	for(const EquationBase* eq : eqs){
-		vec.push_back(copy(eq));
-	}
-	return vec;
-}
-
-
-
-
-void delete_equation_base(EquationBase* eq){
-	if(eq == nullptr) return;
-	
-	eq->__delete_equation_base__();
-	eq = nullptr;
-}
-
-
 // Constants
 
 namespace Constants{
@@ -1098,4 +1072,4 @@ namespace Constants{
 }
 
 
-}
+} // End of symcalc namespace

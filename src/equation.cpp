@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
-// Equation.cpp:
-// Definitions for the class Equation and friend operator overloaded functions
-
-
 #include "symcalc/symcalc.hpp"
+
+//
+// equation.cpp:
+// Definitions for the class Equation and friend operator overloaded functions
+//
 
 namespace symcalc{
 
@@ -61,13 +61,6 @@ Equation::Equation(const Equation& lvalue) : eq(nullptr){
 Equation::~Equation(){
 	delete_equation_base(eq);
 }
-
-
-
-
-
-
-
 
 
 
@@ -223,82 +216,6 @@ std::vector<std::string> Equation::list_variables_str() const{
 }
 
 
-
-//
-// Gradient vector functions
-// 
-// Returns a vector partial derivatives in the function
-//
-
-// Return the gradient vector for variables specified as the argument in that order
-std::vector<Equation> Equation::gradient(std::vector<Equation> order) const{
-	std::vector<Equation> final_out {};
-	for(Equation var : order){
-		final_out.push_back(this->derivative(var));
-	}
-	return final_out;
-}
-
-// Returns the gradient vector for all variables in some order provided by list_variables()
-std::vector<Equation> Equation::gradient() const{
-	return this->gradient(this->list_variables());
-}
-
-
-
-
-//
-// Outside functions
-//
-// Functions that implement SymCalc functionality, but are outside of Equation
-//
-
-
-// Get list of variables for the vector of Equation
-std::vector<std::string> list_variables_str(std::vector<Equation> equations){
-	std::vector<std::string> variables {};
-	for(Equation& eq : equations){
-		std::vector<std::string> eq_variables = eq.list_variables_str();
-		for(std::string& var : eq_variables){
-			if(!include(variables, var)){
-				variables.push_back(var);
-			}
-		}
-	}
-	return variables;
-}
-
-
-std::vector<Equation> list_variables(std::vector<Equation> equations){
-	std::vector<std::string> variables = list_variables_str(equations);
-	std::vector<Equation> final_vars {};
-	final_vars.reserve(variables.size());
-	for(std::string var : variables){
-		final_vars.push_back(Equation(var));
-	}
-	return final_vars;
-}
-
-// Jacobian matrix out of a list of equations
-std::vector<std::vector<Equation>> jacobian(std::vector<Equation> eqs){
-	std::vector<std::string> var_list = list_variables_str(eqs);
-	std::vector<std::vector<Equation>> jacobian_matrix {};
-	
-	for(Equation eq : eqs){
-		std::vector<Equation> gradients {};
-		for(std::string var : var_list){
-			gradients.push_back(eq.derivative(var));
-		}
-		jacobian_matrix.push_back(gradients);
-	}
-	return jacobian_matrix;
-}
-
-
-
-
-
-
-} // End symcalc namespace
+} // End of symcalc namespace
 
 

@@ -35,8 +35,8 @@ namespace symcalc{
 extern bool SYMCALC_AUTO_SIMPLIFY;
 
 
-template<typename T>
-bool include(std::vector<T> vec, T element){
+// Include helper function used to find if an element is in a vector, defined here since it's a template function
+template<typename T> bool include(std::vector<T> vec, T element){
 	for(T el : vec){
 		if(el == element){
 			return true;
@@ -45,6 +45,8 @@ bool include(std::vector<T> vec, T element){
 	return false;
 }
 
+
+// Inside classes, defined in symcalc.cpp
 
 class EquationBase{
 public:
@@ -416,18 +418,13 @@ public:
 
 
 
-
-
-
-
+// Functions that help with management of EquationBase pointers, defined in helpers.cpp
 EquationBase* copy(const EquationBase* start_eq);
 std::vector<EquationBase*> copy(std::vector<const EquationBase*> start_eq);
-
-
 void delete_equation_base(EquationBase* eq);
 
 
-
+// Equation class, defined in equation.cpp
 class Equation{
 public:
 	EquationBase* eq;
@@ -482,6 +479,8 @@ public:
 
 
 
+// Outside functions, defined in functions.cpp
+
 Equation exp(const Equation eq);
 Equation ln(const Equation eq);
 Equation log(const Equation eq, const Equation base);
@@ -490,26 +489,15 @@ Equation abs(const Equation eq);
 Equation sin(const Equation eq);
 Equation cos(const Equation eq);
 
-//
-// Outside SymCalc operation functions
-//
 
-// Get list of variables for the vector of Equation
-std::vector<std::string> list_variables_str(std::vector<Equation>);
-std::vector<Equation> list_variables(std::vector<Equation>);
-
-// Jacobian matrix out of a list of equations
-std::vector<std::vector<Equation>> jacobian(std::vector<Equation>);
-
-
-// Constants
+// Constants, defined in symcalc.cpp
 
 namespace Constants{
 	extern Equation Pi;
 	extern Equation E;
 }
 
-}
+} // End of symcalc namespace
 
 
 #endif

@@ -49,4 +49,4 @@ Equation cos(const Equation eq){
 	return Equation(new Cos(copy(eq.eq)));
 }
 
-} // End symcalc namespace
+} // End of symcalc namespace
