@@ -468,11 +468,6 @@ public:
 		return eq->type;
 	}
 	
-	
-	// Gradient vector functions
-	std::vector<Equation> gradient(std::vector<Equation>) const;
-	std::vector<Equation> gradient() const;
-	
 
 	~Equation();
 };
