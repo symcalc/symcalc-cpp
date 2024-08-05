@@ -21,15 +21,51 @@
 
 namespace symcalc{
 
-
 // Constructors and deconstructors
 
-// Empty constructor
-Equation::Equation() : eq(nullptr) {}
+//
+// Rule of Five
+// 
+
+// Copy constructor
+Equation::Equation(const Equation& other){
+	const EquationBase* lvalue_eq = other.eq;	
+	eq = copy(lvalue_eq);
+}
+
+// Move constructor
+Equation::Equation(Equation&& other){
+	this->eq = copy(other.eq);
+}
+
+// Move assignment
+Equation& Equation::operator=(Equation &&other){
+	this->eq = copy(other.eq);
+	return *this;
+}
+
+Equation& Equation::operator=(const Equation& other){
+	this->eq = copy(other.eq);
+	return *this;
+}
+
+// Deconstructor
+Equation::~Equation(){
+	delete_equation_base(eq);
+}
+
+
+//
+// Normal constructors
+//
+
 // Constructor for any operation with check to auto simplify or not
 Equation::Equation(EquationBase* make_eq) {
+	if(make_eq == nullptr)
+	throw std::runtime_error("Provided pointer is a nullptr");
+
 	if(SYMCALC_AUTO_SIMPLIFY){
-		eq = make_eq->__simplify__();
+		eq = make_eq->_simplify();
 		delete_equation_base(make_eq);
 	}else{
 		eq = make_eq;
@@ -51,19 +87,17 @@ Equation::Equation(SYMCALC_VAR_NAME_TYPE const_name, SYMCALC_VALUE_TYPE value){
 	this->eq = new Constant(const_name, value);
 }
 
-// Copy constructor
-Equation::Equation(const Equation& lvalue) : eq(nullptr){
-	const EquationBase* lvalue_eq = lvalue.eq;	
-	eq = copy(lvalue_eq);
+
+
+// copy.eq() function
+EquationBase* Equation::copy_eq() const{
+	return copy(this->eq);
 }
 
-// Deconstructor
-Equation::~Equation(){
-	delete_equation_base(eq);
+// type() function
+std::string Equation::type() const{
+	return eq->type;
 }
-
-
-
 
 
 
@@ -135,7 +169,7 @@ Equation Equation::derivative(Equation variable, size_t order) const{
 	}
 	EquationBase* deriv = eq;
 	for(size_t i = 0; i < order; i++){
-		deriv = deriv->__derivative__(var->name);
+		deriv = deriv->_derivative(var->name);
 	}	
 	
 	return Equation(deriv);
@@ -191,7 +225,7 @@ SYMCALC_VALUE_TYPE Equation::operator()() const{
 // Simplification
 
 Equation Equation::simplify() const{
-	return Equation(eq->__simplify__());
+	return Equation(eq->_simplify());
 }
 
 

@@ -44,7 +44,7 @@ EquationBase::~EquationBase(){
 }
 
 
-EquationBase* EquationBase::__simplify__() const {return copy(this);};
+EquationBase* EquationBase::_simplify() const {return copy(this);};
 
 
 Variable::Variable(SYMCALC_VAR_NAME_TYPE name) : EquationBase("var"), name(name) {}
@@ -72,7 +72,7 @@ SYMCALC_VALUE_TYPE Variable::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 
 
 
-EquationBase* Variable::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* Variable::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	if(var != this->name){
 		return new EquationValue(0.0);
 	}
@@ -80,15 +80,15 @@ EquationBase* Variable::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 }
 
 
-EquationBase* Variable::__simplify__() const{
+EquationBase* Variable::_simplify() const{
 	return copy(this);
 }
 
-EquationBase* Variable::__copy_equation_base__() const{
+EquationBase* Variable::_copy_equation_base() const{
 	const Variable* casted = dynamic_cast<const Variable*>(this);
 	return new Variable(*casted);
 }
-void Variable::__delete_equation_base__(){
+void Variable::_delete_equation_base(){
 	Variable* casted = dynamic_cast<Variable*>(this);
 	delete casted;
 }
@@ -119,21 +119,21 @@ SYMCALC_VALUE_TYPE EquationValue::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return value;
 }
 
-EquationBase* EquationValue::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* EquationValue::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	return (new EquationValue(0));
 }
 
 
-EquationBase* EquationValue::__simplify__() const{
+EquationBase* EquationValue::_simplify() const{
 	return copy(this);
 }
 
 
-EquationBase* EquationValue::__copy_equation_base__() const{
+EquationBase* EquationValue::_copy_equation_base() const{
 	const EquationValue* casted = dynamic_cast<const EquationValue*>(this);
 	return new EquationValue(*casted);
 }
-void EquationValue::__delete_equation_base__(){
+void EquationValue::_delete_equation_base(){
 	EquationValue* casted = dynamic_cast<EquationValue*>(this);
 	delete casted;
 }
@@ -153,12 +153,12 @@ std::string Constant::txt() const{
 	return this->name;
 }
 
-EquationBase* Constant::__copy_equation_base__() const{
+EquationBase* Constant::_copy_equation_base() const{
 	const Constant* casted = dynamic_cast<const Constant*>(this);
 	return new Constant(*casted);
 }
 
-void Constant::__delete_equation_base__(){
+void Constant::_delete_equation_base(){
 	Constant* casted = dynamic_cast<Constant*>(this);
 	delete casted;
 }
@@ -244,25 +244,25 @@ SYMCALC_VALUE_TYPE Sum::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return result;
 }
 
-EquationBase* Sum::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* Sum::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	
 	std::vector<EquationBase*> derivs;
 	derivs.reserve(elements.size());
 	
 	for(EquationBase* el : elements){
-		derivs.push_back(el->__derivative__(var));
+		derivs.push_back(el->_derivative(var));
 	}
 	
 	return new Sum(derivs);
 }
 
 
-EquationBase* Sum::__simplify__() const{
+EquationBase* Sum::_simplify() const{
 	std::vector<EquationBase*> els;
 
 	
 	for(EquationBase* element : elements){
-		EquationBase* simplified = element->__simplify__();
+		EquationBase* simplified = element->_simplify();
 		if(simplified->type == "val"){
 			EquationValue* casted = dynamic_cast<EquationValue*>(simplified);
 			if(casted->value != 0){
@@ -284,11 +284,11 @@ EquationBase* Sum::__simplify__() const{
 	return new Sum(els);
 }
 
-EquationBase* Sum::__copy_equation_base__() const{
+EquationBase* Sum::_copy_equation_base() const{
 	const Sum* casted = dynamic_cast<const Sum*>(this);
 	return new Sum(*casted);
 }
-void Sum::__delete_equation_base__(){
+void Sum::_delete_equation_base(){
 	Sum* casted = dynamic_cast<Sum*>(this);
 	delete casted;
 }
@@ -321,13 +321,13 @@ SYMCALC_VALUE_TYPE Negate::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return -eq->eval(var_hash);
 }
 
-EquationBase* Negate::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
-	return new Negate(eq->__derivative__(var));
+EquationBase* Negate::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
+	return new Negate(eq->_derivative(var));
 }
 
 
-EquationBase* Negate::__simplify__() const{
-	EquationBase* simplified = eq->__simplify__();
+EquationBase* Negate::_simplify() const{
+	EquationBase* simplified = eq->_simplify();
 	if(eq->type == "neg"){
 		Negate* casted = dynamic_cast<Negate*>(simplified);
 		return casted->eq;
@@ -336,11 +336,11 @@ EquationBase* Negate::__simplify__() const{
 	}
 }
 
-EquationBase* Negate::__copy_equation_base__() const{
+EquationBase* Negate::_copy_equation_base() const{
 	const Negate* casted = dynamic_cast<const Negate*>(this);
 	return new Negate(*casted);
 }
-void Negate::__delete_equation_base__(){
+void Negate::_delete_equation_base(){
 	Negate* casted = dynamic_cast<Negate*>(this);
 	delete casted;
 }
@@ -415,7 +415,7 @@ SYMCALC_VALUE_TYPE Mult::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return result;
 }
 
-EquationBase* Mult::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* Mult::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	
 	std::vector<EquationBase*> mults_to_sum;
 	mults_to_sum.reserve(elements.size());
@@ -426,7 +426,7 @@ EquationBase* Mult::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 	
 	for(size_t el_i = 0; el_i < elements.size(); el_i++){
 		
-		els_to_mult.push_back(elements[el_i]->__derivative__(var));
+		els_to_mult.push_back(elements[el_i]->_derivative(var));
 		
 		for(size_t el_noderiv_i = 0; el_noderiv_i < elements.size(); el_noderiv_i++){
 			if(el_noderiv_i == el_i){
@@ -444,18 +444,18 @@ EquationBase* Mult::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 
 
 
-EquationBase* Mult::__simplify__() const{
+EquationBase* Mult::_simplify() const{
 	
 	std::vector<EquationBase*> els;
 	
 	if(elements.size() == 1){
-		return elements[0]->__simplify__();
+		return elements[0]->_simplify();
 	}
 	
 	SYMCALC_VALUE_TYPE coeff = 1.0; // Multiply all numerical values to a single coefficient
 
 	for(EquationBase* el : elements){
-		EquationBase* simplified = el->__simplify__();
+		EquationBase* simplified = el->_simplify();
 		if(simplified->type == "val"){
 			EquationValue* casted = dynamic_cast<EquationValue*>(simplified);
 			if(casted->value == 0){ // If zero, stop loop and output zero, since anything * 0 is 0
@@ -483,11 +483,11 @@ EquationBase* Mult::__simplify__() const{
 }
 
 
-EquationBase* Mult::__copy_equation_base__() const{
+EquationBase* Mult::_copy_equation_base() const{
 	const Mult* casted = dynamic_cast<const Mult*>(this);
 	return new Mult(*casted);
 }
-void Mult::__delete_equation_base__(){
+void Mult::_delete_equation_base(){
 	Mult* casted = dynamic_cast<Mult*>(this);
 	delete casted;
 }
@@ -532,13 +532,13 @@ SYMCALC_VALUE_TYPE Div::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return dividend->eval(var_hash) / divisor->eval(var_hash);
 }
 
-EquationBase* Div::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* Div::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	
 	// Derivative of f(x) / g(x)
 	// = (f'(x) * g(x) - f(x) * g'(x)) / g(x)^2
 	
-	EquationBase* left_part = new Mult({dividend->__derivative__(var), copy(divisor)}); // f'(x) * g(x)
-	EquationBase* right_part = new Mult({copy(dividend), divisor->__derivative__(var)}); // f(x) * g'(x)
+	EquationBase* left_part = new Mult({dividend->_derivative(var), copy(divisor)}); // f'(x) * g(x)
+	EquationBase* right_part = new Mult({copy(dividend), divisor->_derivative(var)}); // f(x) * g'(x)
 	
 	EquationBase* top = new Sum({left_part, new Negate(right_part)}); // f'(x) * g(x) - f(x) * g'(x)
 	
@@ -549,20 +549,20 @@ EquationBase* Div::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 
 
 
-EquationBase* Div::__simplify__() const{
+EquationBase* Div::_simplify() const{
 	
-	EquationBase* dividend_s = dividend->__simplify__();
-	EquationBase* divisor_s = divisor->__simplify__();
+	EquationBase* dividend_s = dividend->_simplify();
+	EquationBase* divisor_s = divisor->_simplify();
 	
 	return new Div(dividend_s, divisor_s);
 }
 
 
-EquationBase* Div::__copy_equation_base__() const{
+EquationBase* Div::_copy_equation_base() const{
 	const Div* casted = dynamic_cast<const Div*>(this);
 	return new Div(*casted);
 }
-void Div::__delete_equation_base__(){
+void Div::_delete_equation_base(){
 	Div* casted = dynamic_cast<Div*>(this);
 	delete casted;
 }
@@ -609,7 +609,7 @@ SYMCALC_VALUE_TYPE Power::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return std::pow(base->eval(var_hash), power->eval(var_hash));
 }
 
-EquationBase* Power::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* Power::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	if(power->type == "val" || power->type == "const"){
 	
 		// If the power is a number or a constant then return the following:
@@ -622,7 +622,7 @@ EquationBase* Power::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 		EquationBase* power_copy = copy(power); // C
 		EquationBase* base_copy = copy(base); // g
 		EquationBase* new_eq_value = new EquationValue(power_eq->value - 1); // C - 1
-		EquationBase* base_deriv = base->__derivative__(var); // dg/dx
+		EquationBase* base_deriv = base->_derivative(var); // dg/dx
 		EquationBase* power_to_mult = new Power(base_copy, new_eq_value); // g ^ C - 1
 		
 		EquationBase* final_mult = new Mult({power_copy, power_to_mult, base_deriv}); // C * g^(C - 1) * dg/dx
@@ -631,9 +631,9 @@ EquationBase* Power::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 		// derivative of f(x) ^ g(x) = f(x)^g(x) * (g'(x) * ln(f(x)) + f'(x) * g(x) / f(x))
 		EquationBase* mult_l_part = new Power(copy(base), copy(power));
 		
-		EquationBase* sum_l_part = new Mult({power->__derivative__(var), new Ln(copy(base))});
+		EquationBase* sum_l_part = new Mult({power->_derivative(var), new Ln(copy(base))});
 		
-		EquationBase* sum_r_part_mult = new Mult({base->__derivative__(var), copy(power)});
+		EquationBase* sum_r_part_mult = new Mult({base->_derivative(var), copy(power)});
 		EquationBase* sum_r_part = new Div(sum_r_part_mult, copy(base));
 		
 		EquationBase* mult_r_part = new Sum({sum_l_part, sum_r_part});
@@ -644,10 +644,10 @@ EquationBase* Power::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 
 
 
-EquationBase* Power::__simplify__() const{
+EquationBase* Power::_simplify() const{
 
-	EquationBase* base_s = base->__simplify__();
-	EquationBase* power_s = power->__simplify__();
+	EquationBase* base_s = base->_simplify();
+	EquationBase* power_s = power->_simplify();
 
 	if(base_s->type == "val"){
 		EquationValue* casted = dynamic_cast<EquationValue*>(base_s);
@@ -671,11 +671,11 @@ EquationBase* Power::__simplify__() const{
 	
 }
 
-EquationBase* Power::__copy_equation_base__() const{
+EquationBase* Power::_copy_equation_base() const{
 	const Power* casted = dynamic_cast<const Power*>(this);
 	return new Power(*casted);
 }
-void Power::__delete_equation_base__(){
+void Power::_delete_equation_base(){
 	Power* casted = dynamic_cast<Power*>(this);
 	delete casted;
 }
@@ -718,24 +718,24 @@ SYMCALC_VALUE_TYPE Log::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return std::log(eq->eval(var_hash)) / std::log(base->eval(var_hash));
 }
 
-EquationBase* Log::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
-	EquationBase* div = new Div(eq->__derivative__(var), copy(eq));
+EquationBase* Log::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
+	EquationBase* div = new Div(eq->_derivative(var), copy(eq));
 	EquationBase* natural_log = new Ln(copy(this->base));
 	return new Mult({div, natural_log});
 }
 
 
-EquationBase* Log::__simplify__() const{
-	EquationBase* simplified_eq = eq->__simplify__();
-	EquationBase* simplified_base = base->__simplify__();
+EquationBase* Log::_simplify() const{
+	EquationBase* simplified_eq = eq->_simplify();
+	EquationBase* simplified_base = base->_simplify();
 	return new Log(simplified_eq, simplified_base);
 }
 
-EquationBase* Log::__copy_equation_base__() const{
+EquationBase* Log::_copy_equation_base() const{
 	const Log* casted = dynamic_cast<const Log*>(this);
 	return new Log(*casted);
 }
-void Log::__delete_equation_base__(){
+void Log::_delete_equation_base(){
 	Log* casted = dynamic_cast<Log*>(this);
 	delete casted;
 }
@@ -772,13 +772,13 @@ SYMCALC_VALUE_TYPE Ln::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return std::log(eq->eval(var_hash));
 }
 
-EquationBase* Ln::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
-	return new Div(eq->__derivative__(var), copy(eq));
+EquationBase* Ln::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
+	return new Div(eq->_derivative(var), copy(eq));
 }
 
 
-EquationBase* Ln::__simplify__() const{
-	EquationBase* simplified = eq->__simplify__();
+EquationBase* Ln::_simplify() const{
+	EquationBase* simplified = eq->_simplify();
 	if(simplified->type == "exp"){
 		Exp* casted = dynamic_cast<Exp*>(simplified);
 		EquationBase* return_value = copy(casted->eq);
@@ -794,11 +794,11 @@ EquationBase* Ln::__simplify__() const{
 	return new Ln(simplified);
 }
 
-EquationBase* Ln::__copy_equation_base__() const{
+EquationBase* Ln::_copy_equation_base() const{
 	const Ln* casted = dynamic_cast<const Ln*>(this);
 	return new Ln(*casted);
 }
-void Ln::__delete_equation_base__(){
+void Ln::_delete_equation_base(){
 	Ln* casted = dynamic_cast<Ln*>(this);
 	delete casted;
 }
@@ -835,8 +835,8 @@ SYMCALC_VALUE_TYPE Exp::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 	return std::exp(eq->eval(var_hash));
 }
 
-EquationBase* Exp::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
-	return new Mult({copy(this), eq->__derivative__(var)});
+EquationBase* Exp::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
+	return new Mult({copy(this), eq->_derivative(var)});
 }
 
 
@@ -845,8 +845,8 @@ std::vector<SYMCALC_VAR_NAME_TYPE> Exp::list_variables() const{
 }
 
 
-EquationBase* Exp::__simplify__() const{
-	EquationBase* simplified = eq->__simplify__();
+EquationBase* Exp::_simplify() const{
+	EquationBase* simplified = eq->_simplify();
 	if(simplified->type == "ln"){
 		Ln* casted = dynamic_cast<Ln*>(simplified);
 		return casted->eq;
@@ -855,11 +855,11 @@ EquationBase* Exp::__simplify__() const{
 	}
 }
 
-EquationBase* Exp::__copy_equation_base__() const{
+EquationBase* Exp::_copy_equation_base() const{
 	const Exp* casted = dynamic_cast<const Exp*>(this);
 	return new Exp(*casted);
 }
-void Exp::__delete_equation_base__(){
+void Exp::_delete_equation_base(){
 	Exp* casted = dynamic_cast<Exp*>(this);
 	delete casted;
 }
@@ -884,14 +884,14 @@ Abs::~Abs(){
 
 
 // Dynamic cast copy function
-EquationBase* Abs::__copy_equation_base__() const{
+EquationBase* Abs::_copy_equation_base() const{
 	const Abs* casted = dynamic_cast<const Abs*>(this);
 	return new Abs(*casted); // Create a copy and return it
 }
 
 
 // Dynamic cast delete function
-void Abs::__delete_equation_base__(){
+void Abs::_delete_equation_base(){
 	Abs* casted = dynamic_cast<Abs*>(this);
 	delete casted;
 }
@@ -921,8 +921,8 @@ std::vector<SYMCALC_VAR_NAME_TYPE> Abs::list_variables() const{
 // Example:
 // If f(x) = x, then
 // |x|' = (x / |x|) * (x)' = (x / |x|) * 1 = x / |x|
-EquationBase* Abs::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
-	EquationBase* insides_derivative = insides->__derivative__(var); // f'(x)
+EquationBase* Abs::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
+	EquationBase* insides_derivative = insides->_derivative(var); // f'(x)
 	EquationBase* insides_copy_1 = copy(insides); // f(x)
 	EquationBase* insides_copy_2 = copy(insides); // f(x)
 	EquationBase* abs_insides = new Abs(insides_copy_2); // |f(x)|
@@ -933,8 +933,8 @@ EquationBase* Abs::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
 
 
 // Simplify function
-EquationBase* Abs::__simplify__() const{
-	EquationBase* simplified_insides = insides->__simplify__();
+EquationBase* Abs::_simplify() const{
+	EquationBase* simplified_insides = insides->_simplify();
 	if(simplified_insides->type == "abs"){
 		return simplified_insides; // Absolute function twice is the same as once, ||x|| = |x| 
 	}else if(simplified_insides->type == "pow"){
@@ -985,22 +985,22 @@ SYMCALC_VALUE_TYPE Sin::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 }
 
 
-EquationBase* Sin::__simplify__() const{
+EquationBase* Sin::_simplify() const{
 	return copy(this);
 }
 
-EquationBase* Sin::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* Sin::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	EquationBase* cos_func = new Cos(copy(eq));
-	EquationBase* eq_deriv = eq->__derivative__(var);
+	EquationBase* eq_deriv = eq->_derivative(var);
 	return new Mult({cos_func, eq_deriv});
 }
 
-EquationBase* Sin::__copy_equation_base__() const{
+EquationBase* Sin::_copy_equation_base() const{
 	const Sin* casted = dynamic_cast<const Sin*>(this);
 	return new Sin(*casted);
 }
 
-void Sin::__delete_equation_base__(){
+void Sin::_delete_equation_base(){
 	Sin* casted = dynamic_cast<Sin*>(this);
 	delete casted;
 }
@@ -1038,22 +1038,22 @@ SYMCALC_VALUE_TYPE Cos::eval(SYMCALC_VAR_HASH_TYPE var_hash) const{
 }
 
 
-EquationBase* Cos::__simplify__() const{
+EquationBase* Cos::_simplify() const{
 	return copy(this);
 }
 
-EquationBase* Cos::__derivative__(SYMCALC_VAR_NAME_TYPE var) const{
+EquationBase* Cos::_derivative(SYMCALC_VAR_NAME_TYPE var) const{
 	EquationBase* minus_sin_func = new Negate(new Sin(copy(eq)));
-	EquationBase* eq_deriv = eq->__derivative__(var);
+	EquationBase* eq_deriv = eq->_derivative(var);
 	return new Mult({minus_sin_func, eq_deriv});
 }
 
-EquationBase* Cos::__copy_equation_base__() const{
+EquationBase* Cos::_copy_equation_base() const{
 	const Cos* casted = dynamic_cast<const Cos*>(this);
 	return new Cos(*casted);
 }
 
-void Cos::__delete_equation_base__(){
+void Cos::_delete_equation_base(){
 	Cos* casted = dynamic_cast<Cos*>(this);
 	delete casted;
 }

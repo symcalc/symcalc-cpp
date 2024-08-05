@@ -26,7 +26,7 @@ namespace symcalc{
 // Functions that help with properly copying and deleting EquationBase pointers
 
 EquationBase* copy(const EquationBase* start_eq){
-	return start_eq->__copy_equation_base__();
+	return start_eq->_copy_equation_base();
 }
 
 std::vector<EquationBase*> copy(std::vector<const EquationBase*> eqs){
@@ -41,7 +41,7 @@ std::vector<EquationBase*> copy(std::vector<const EquationBase*> eqs){
 void delete_equation_base(EquationBase* eq){
 	if(eq == nullptr) return;
 	
-	eq->__delete_equation_base__();
+	eq->_delete_equation_base();
 	eq = nullptr;
 }
 

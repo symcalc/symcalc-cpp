@@ -22,31 +22,31 @@
 namespace symcalc{
 
 Equation exp(const Equation eq){
-	return Equation(new Exp(copy(eq.eq)));
+	return Equation(new Exp(eq.copy_eq()));
 }
 
 Equation ln(const Equation eq){
-	return Equation(new Ln(copy(eq.eq)));
+	return Equation(new Ln(eq.copy_eq()));
 }
 
 Equation log(const Equation eq, const Equation base){
-	return Equation(new Log(copy(eq.eq), copy(base.eq)));
+	return Equation(new Log(eq.copy_eq(), base.copy_eq()));
 }
 
 Equation pow(const Equation base, const Equation power){
-	return Equation(new Power(copy(base.eq), copy(power.eq)));
+	return Equation(new Power(base.copy_eq(), power.copy_eq()));
 }
 
 Equation abs(const Equation eq){
-	return Equation(new Abs(copy(eq.eq)));
+	return Equation(new Abs(eq.copy_eq()));
 }
 
 Equation sin(const Equation eq){
-	return Equation(new Sin(copy(eq.eq)));
+	return Equation(new Sin(eq.copy_eq()));
 }
 
 Equation cos(const Equation eq){
-	return Equation(new Cos(copy(eq.eq)));
+	return Equation(new Cos(eq.copy_eq()));
 }
 
 } // End of symcalc namespace

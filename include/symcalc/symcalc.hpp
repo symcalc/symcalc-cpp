@@ -16,14 +16,20 @@
 #define SYMCALC_H
 
 
-#define SYMCALC_VALUE_TYPE double
+//#define SYMCALC_VALUE_TYPE double
+//
+//#include <string>
+//#define SYMCALC_VAR_NAME_TYPE std::string
+//
+//#include <map>
+//#define SYMCALC_VAR_HASH_TYPE std::map<SYMCALC_VAR_NAME_TYPE, SYMCALC_VALUE_TYPE>
 
 #include <string>
-#define SYMCALC_VAR_NAME_TYPE std::string
-
 #include <map>
-#define SYMCALC_VAR_HASH_TYPE std::map<SYMCALC_VAR_NAME_TYPE, SYMCALC_VALUE_TYPE>
 
+typedef double SYMCALC_VALUE_TYPE;
+typedef std::string SYMCALC_VAR_NAME_TYPE;
+typedef std::map<SYMCALC_VAR_NAME_TYPE, SYMCALC_VALUE_TYPE> SYMCALC_VAR_HASH_TYPE;
 
 #include <iostream>
 #include <vector>
@@ -59,14 +65,14 @@ public:
 	
 	virtual std::string txt() const {return "";};
 	virtual SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const {return 0.0;};
-	virtual EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const {return nullptr;};
+	virtual EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const {return nullptr;};
 	
 	virtual std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const{return std::vector<SYMCALC_VAR_NAME_TYPE>();};
 	
-	virtual EquationBase* __simplify__() const;
+	virtual EquationBase* _simplify() const;
 	
-	virtual EquationBase* __copy_equation_base__() const = 0;
-	virtual void __delete_equation_base__() = 0;
+	virtual EquationBase* _copy_equation_base() const = 0;
+	virtual void _delete_equation_base() = 0;
 };
 
 
@@ -83,14 +89,14 @@ public:
 	
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -107,14 +113,14 @@ public:
 	
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -127,8 +133,8 @@ public:
 	
 	std::string txt() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -147,14 +153,14 @@ public:
 
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -170,14 +176,14 @@ public:
 
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -194,14 +200,14 @@ public:
 
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -219,14 +225,14 @@ public:
 
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -246,14 +252,14 @@ public:
 
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -270,14 +276,14 @@ public:
 	
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -294,14 +300,14 @@ public:
 
 	std::string txt() const override;
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -320,14 +326,14 @@ public:
 	std::string txt() const override;
 	
 	SYMCALC_VALUE_TYPE eval(SYMCALC_VAR_HASH_TYPE var_hash) const override;
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 };
 
 
@@ -343,8 +349,8 @@ public:
 	~Abs();
 	
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 	
 	std::string txt() const override;
 	
@@ -352,9 +358,9 @@ public:
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 };
 
 
@@ -373,8 +379,8 @@ public:
 	~Sin();
 	
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 	
 	std::string txt() const override;
 	
@@ -382,9 +388,9 @@ public:
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 };
 
 
@@ -401,8 +407,8 @@ public:
 	~Cos();
 	
 	
-	EquationBase* __copy_equation_base__() const override;
-	void __delete_equation_base__() override;
+	EquationBase* _copy_equation_base() const override;
+	void _delete_equation_base() override;
 	
 	std::string txt() const override;
 	
@@ -410,9 +416,9 @@ public:
 	
 	std::vector<SYMCALC_VAR_NAME_TYPE> list_variables() const override;
 
-	EquationBase* __derivative__(SYMCALC_VAR_NAME_TYPE var) const override;
+	EquationBase* _derivative(SYMCALC_VAR_NAME_TYPE var) const override;
 	
-	EquationBase* __simplify__() const override;
+	EquationBase* _simplify() const override;
 };
 
 
@@ -426,17 +432,30 @@ void delete_equation_base(EquationBase* eq);
 
 // Equation class, defined in equation.cpp
 class Equation{
-public:
+protected:
 	EquationBase* eq;
-	
-	Equation();
+public:
+
+	// Constructors
 	Equation(EquationBase* equation);
 	Equation(Variable var);
 	Equation(SYMCALC_VALUE_TYPE value);
 	Equation(SYMCALC_VAR_NAME_TYPE var_name);
 	Equation(SYMCALC_VAR_NAME_TYPE const_name, SYMCALC_VALUE_TYPE value);
-	Equation(const Equation& lvalue);
+
+	// Copy constructor
+	Equation(const Equation& other);
+	// Move constructor
+	Equation(Equation&& other);
 	
+	// Move assignment
+	Equation& operator=(Equation&& other);
+	// Copy assignment
+	Equation& operator=(const Equation& other);
+	
+	// Deconstructor
+	~Equation();
+
 	friend std::ostream& operator<<(std::ostream &stream, const Equation equation);
 	friend bool operator<(const Equation equation1, const Equation equation2);
 	friend Equation operator+(const Equation eq1, const Equation eq2);
@@ -464,12 +483,10 @@ public:
 	SYMCALC_VALUE_TYPE operator()(std::map<Equation, SYMCALC_VALUE_TYPE> var_hash) const;
 	SYMCALC_VALUE_TYPE operator()() const;
 
-	std::string type() const{
-		return eq->type;
-	}
-	
+	std::string type() const;
 
-	~Equation();
+	// copy_eq() function to be able to access the eq pointer, but a copy
+	EquationBase* copy_eq() const;
 };
 
 
