@@ -16,14 +16,6 @@
 #define SYMCALC_H
 
 
-//#define SYMCALC_VALUE_TYPE double
-//
-//#include <string>
-//#define SYMCALC_VAR_NAME_TYPE std::string
-//
-//#include <map>
-//#define SYMCALC_VAR_HASH_TYPE std::map<SYMCALC_VAR_NAME_TYPE, SYMCALC_VALUE_TYPE>
-
 #include <string>
 #include <map>
 
