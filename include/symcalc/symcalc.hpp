@@ -15,13 +15,8 @@
 #ifndef SYMCALC_H
 #define SYMCALC_H
 
-
 #include <string>
 #include <map>
-
-typedef double SYMCALC_VALUE_TYPE;
-typedef std::string SYMCALC_VAR_NAME_TYPE;
-typedef std::map<SYMCALC_VAR_NAME_TYPE, SYMCALC_VALUE_TYPE> SYMCALC_VAR_HASH_TYPE;
 
 #include <iostream>
 #include <vector>
@@ -29,6 +24,10 @@ typedef std::map<SYMCALC_VAR_NAME_TYPE, SYMCALC_VALUE_TYPE> SYMCALC_VAR_HASH_TYP
 
 
 namespace symcalc{
+
+typedef double SYMCALC_VALUE_TYPE;
+typedef std::string SYMCALC_VAR_NAME_TYPE;
+typedef std::map<SYMCALC_VAR_NAME_TYPE, SYMCALC_VALUE_TYPE> SYMCALC_VAR_HASH_TYPE;
 
 extern bool SYMCALC_AUTO_SIMPLIFY;
 
